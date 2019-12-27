@@ -28,3 +28,10 @@ export function logout() {
     method: 'delete'
   })
 }
+
+export function analyze() {
+  return request({
+    url: '/admin/analyze',
+    method: 'get'
+  })
+}

@@ -29,10 +29,8 @@
     <div class="chart">
       <el-card class="box-card" shadow="hover">
         <div slot="header" class="clearfix">
-          <span style="font-weight:bold">访客统计</span>
+          <span style="font-weight:bold">数据统计</span>
         </div>
-        <div style="color:#888;font-size:18px;margin:10px 20px;">到访总人数</div>
-        <div style="font-weight:bold;font-size:30px;margin:10px 20px;">50</div>
         <div class="chart-body">
           <div class="left">
             <ve-line :data="chartData" />
@@ -65,24 +63,24 @@
 </template>
 
 <script>
-import { count } from '@/api/admin'
+import { count, analyze } from '@/api/admin'
 export default {
   data() {
     return {
       // 折线图的数据
       chartData: {
-        columns: ['时间', '01号门', '02号门', '03号门'],
+        columns: ['时间', '发布文章'],
         rows: [
-          { 时间: '09:00', '01号门': 7, '02号门': 5, '03号门': 1 },
-          { 时间: '10:00', '01号门': 2, '02号门': 1, '03号门': 6 },
-          { 时间: '11:00', '01号门': 10, '02号门': 8, '03号门': 9 },
-          { 时间: '12:00', '01号门': 6, '02号门': 10, '03号门': 6 },
-          { 时间: '13:00', '01号门': 8, '02号门': 13, '03号门': 2 },
-          { 时间: '14:00', '01号门': 11, '02号门': 6, '03号门': 11 },
-          { 时间: '15:00', '01号门': 7, '02号门': 8, '03号门': 7 },
-          { 时间: '16:00', '01号门': 2, '02号门': 4, '03号门': 3 },
-          { 时间: '17:00', '01号门': 4, '02号门': 3, '03号门': 6 },
-          { 时间: '18:00', '01号门': 6, '02号门': 0, '03号门': 0 }
+          { 时间: '09:00', '发布文章': 5 },
+          { 时间: '10:00', '发布文章': 1 },
+          { 时间: '11:00', '发布文章': 8 },
+          { 时间: '12:00', '发布文章': 10 },
+          { 时间: '13:00', '发布文章': 13 },
+          { 时间: '14:00', '发布文章': 6 },
+          { 时间: '15:00', '发布文章': 8 },
+          { 时间: '16:00', '发布文章': 4 },
+          { 时间: '17:00', '发布文章': 3 },
+          { 时间: '18:00', '发布文章': 0 }
         ]
       },
       articleCount: null,
@@ -92,6 +90,7 @@ export default {
   },
   created() {
     this.handleGetCount()
+    this.handleAnalyze()
   },
   methods: {
     handleGetCount() {
@@ -100,6 +99,13 @@ export default {
         this.articleCount = data.articleCount
         this.userCount = data.userCount
         this.tagsCount = data.tagsCount
+      })
+    },
+    handleAnalyze() {
+      analyze().then(res => {
+        const { columns, rows } = res
+        this.chartData.columns = columns
+        this.chartData.rows = rows
       })
     }
   }
