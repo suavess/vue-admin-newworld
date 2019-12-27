@@ -61,12 +61,14 @@
             label="创建时间"
             align="center"
             min-width="160"
+            sortable
           />
           <el-table-column
             prop="createdAt"
             label="更新时间"
             align="center"
             min-width="160"
+            sortable
           />
           <el-table-column
             label="操作"

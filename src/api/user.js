@@ -1,23 +1,33 @@
 import request from '@/utils/request'
 
-export function login(data) {
+export function list(data) {
   return request({
-    url: '/admin/login',
-    method: 'post',
+    url: '/admin/users',
+    method: 'get',
+    params: data
+  })
+}
+
+export function del(data) {
+  return request({
+    url: '/admin/users',
+    method: 'delete',
     data
   })
 }
 
-export function info() {
+export function update(data) {
   return request({
-    url: '/admin',
-    method: 'get'
+    url: '/admin/users',
+    method: 'put',
+    data
   })
 }
 
-export function logout() {
+export function reset(data) {
   return request({
-    url: '/admin',
-    method: 'delete'
+    url: '/admin/users/reset',
+    method: 'post',
+    data
   })
 }

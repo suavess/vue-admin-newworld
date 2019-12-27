@@ -2,79 +2,67 @@
   <div class="page">
     <div class="filter">
       <el-form inline>
-        <el-form-item label="标题：">
-          <el-input v-model="queryParam.title" />
+        <el-form-item label="昵称：">
+          <el-input v-model="queryParam.username" />
         </el-form-item>
-        <el-form-item label="作者：">
-          <el-input v-model="queryParam.author" />
+        <el-form-item label="邮箱：">
+          <el-input v-model="queryParam.email" />
         </el-form-item>
-        <el-form-item label="标签：">
-          <el-input v-model="queryParam.tags" />
+        <el-form-item label="简介：">
+          <el-input v-model="queryParam.bio" />
         </el-form-item>
-        <el-button type="primary" @click="handleGetArticleList">查询</el-button>
+        <el-button type="primary" @click="handleGetUserList">查询</el-button>
       </el-form>
     </div>
-    <el-card shadow="hover" class="article">
+    <el-card shadow="hover" class="user">
       <div slot="header">
         <span style="font-weight:bold">文章列表</span>
       </div>
       <div>
         <el-table
-          v-loading="articleListLoading"
-          :data="articleList"
+          v-loading="userListLoading"
+          :data="userList"
           fit
           stripe
           style="width: 100%"
         >
           <el-table-column
-            prop="title"
-            label="标题"
-            min-width="200"
-            align="center"
-          />
-          <el-table-column
-            prop="author.username"
-            label="作者"
-            min-width="130"
-            align="center"
-          />
-          <el-table-column
-            prop="description"
-            label="文章描述"
-            align="center"
-            min-width="200"
-          />
-          <el-table-column
-            label="文章标签"
-            align="center"
-            min-width="200"
-          >
-            <template v-slot="scope">
-              <span v-for="(tag,i) in scope.row.tagList" :key="tag.id">
-                {{ tag.name }}
-                <span v-if="i !== scope.row.tagList.length-1">/</span>
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="createdAt"
-            label="创建时间"
-            align="center"
+            prop="username"
+            label="昵称"
             min-width="160"
-          />
-          <el-table-column
-            prop="createdAt"
-            label="更新时间"
             align="center"
-            min-width="160"
           />
           <el-table-column
-            label="操作"
+            prop="email"
+            label="邮箱"
+            min-width="200"
+            align="center"
+          />
+          <el-table-column
+            prop="bio"
+            label="个人简介"
+            align="center"
+            min-width="200"
+          />
+          <el-table-column
+            prop="image"
+            label="头像"
             align="center"
             min-width="100"
           >
             <template v-slot="scope">
-              <el-button type="danger" size="mini" @click="handleDelArticle(scope.row.id)">删除</el-button>
+              <img :src="scope.row.image" alt="" style="height:50px;width:50px;">
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            align="center"
+            min-width="200"
+          >
+            <template v-slot="scope">
+              <el-button type="primary" size="mini" @click="editDialogData=scope.row;editDialogVisible=true">编辑</el-button>
+              <el-button type="warning" size="mini" @click="handleReset(scope.row)">重置</el-button>
+              <el-button type="danger" size="mini" @click="handleDelUser(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -89,48 +77,90 @@
         />
       </div>
     </el-card>
+    <el-dialog title="编辑" :visible.sync="editDialogVisible" width="30%">
+      <el-form :model="editDialogData" label-position="left" label-width="80px">
+        <el-form-item label="昵称">
+          <el-input v-model="editDialogData.username" />
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="editDialogData.email" />
+        </el-form-item>
+        <el-form-item label="简介">
+          <el-input v-model="editDialogData.bio" />
+        </el-form-item>
+        <el-form-item label="头像">
+          <el-input v-model="editDialogData.image" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleConfirmEdit">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { list, del } from '@/api/article'
+import { list, del, update, reset } from '@/api/user'
 export default {
   data() {
     return {
-      articleListLoading: false,
+      userListLoading: false,
       total: null,
       queryParam: {
         size: 10,
         page: 1,
-        tags: null,
-        author: null,
-        title: null
+        username: null,
+        email: null,
+        bio: null
       },
-      articleList: []
+      userList: [],
+      editDialogVisible: false,
+      editDialogData: {
+        id: null,
+        username: null,
+        email: null,
+        bio: null
+      }
     }
   },
   created() {
-    this.handleGetArticleList()
+    this.handleGetUserList()
   },
   methods: {
     handlePageChange(page) {
       this.queryParam.page = page
-      this.handleGetArticleList()
+      this.handleGetUserList()
     },
-    async handleGetArticleList() {
-      this.articleListLoading = true
+    async handleGetUserList() {
+      this.userListLoading = true
       await list(this.queryParam).then(res => {
         const { data } = res
         this.total = data.total
-        this.articleList = data.rows
+        this.userList = data.rows
       })
-      this.articleListLoading = false
+      this.userListLoading = false
     },
-    handleDelArticle(id) {
+    handleDelUser(id) {
       del({ id: id }).then(res => {
         if (res) {
           this.$message.success('删除成功！')
-          this.handleGetArticleList()
+          this.handleGetUserList()
+        }
+      })
+    },
+    handleConfirmEdit() {
+      update(this.editDialogData).then(res => {
+        if (res) {
+          this.$message.success('更新成功！')
+          this.handleGetUserList()
+        }
+      })
+    },
+    handleReset(row) {
+      reset(row).then(res => {
+        if (res) {
+          this.$message.success('重置密码成功！')
         }
       })
     }
@@ -147,7 +177,7 @@ export default {
     padding: 20px 30px 0px 30px;
     border-radius: 5px;
   }
-  .article{
+  .user{
     margin-top: 25px;
   }
 }

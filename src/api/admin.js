@@ -6,3 +6,25 @@ export function count() {
     method: 'get'
   })
 }
+
+export function login(data) {
+  return request({
+    url: '/admin/login',
+    method: 'post',
+    data
+  })
+}
+
+export function info() {
+  return request({
+    url: '/admin',
+    method: 'get'
+  })
+}
+
+export function logout() {
+  return request({
+    url: '/admin',
+    method: 'delete'
+  })
+}
