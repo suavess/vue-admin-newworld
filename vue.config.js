@@ -37,16 +37,14 @@ module.exports = {
       errors: true
     },
     proxy: {
-      // change xxx-api/login => mock/login
-      // detail: https://cli.vuejs.org/config/#devserver-proxy
-    	'/api': {
-	        target: 'http://localhost:9000', // 请求的目标地址的BaseURL
-	        changeOrigin: true, // 是否开启跨域
-	        pathRewrite: {
-	          '^/api': '' // 规定请求地址以什么作为开头
-	        }
-	    }
-    },
+      '/api': {
+        target: 'http://localhost:9000', // 请求的目标地址的BaseURL
+        changeOrigin: true, // 是否开启跨域
+        pathRewrite: {
+          '^/api': '' // 规定请求地址以什么作为开头
+        }
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
