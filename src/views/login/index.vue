@@ -61,8 +61,8 @@ export default {
     }
     return {
       loginForm: {
-        email: '123456@qq.com',
-        password: '123456'
+        email: '',
+        password: ''
       },
       loginRules: {
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
