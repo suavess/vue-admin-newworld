@@ -125,6 +125,11 @@ export default {
         const { data } = res
         this.total = data.total
         this.articleList = data.rows
+        this.articleList.forEach(article => {
+          if (article.title.length > 20) {
+            article.title = article.title.substring(0, 20) + '...'
+          }
+        })
       })
       this.articleListLoading = false
     },

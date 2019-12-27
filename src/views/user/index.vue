@@ -16,7 +16,7 @@
     </div>
     <el-card shadow="hover" class="user">
       <div slot="header">
-        <span style="font-weight:bold">文章列表</span>
+        <span style="font-weight:bold">用户列表</span>
       </div>
       <div>
         <el-table
@@ -142,7 +142,13 @@ export default {
       this.userListLoading = false
     },
     handleDelUser(id) {
-      del({ id: id }).then(res => {
+      this.$confirm('确定删除该用户吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        return del({ id: id })
+      }).then(res => {
         if (res) {
           this.$message.success('删除成功！')
           this.handleGetUserList()
@@ -158,7 +164,13 @@ export default {
       })
     },
     handleReset(row) {
-      reset(row).then(res => {
+      this.$confirm('确定将该用户密码重置为123456吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        return reset(row)
+      }).then(res => {
         if (res) {
           this.$message.success('重置密码成功！')
         }
