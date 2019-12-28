@@ -103,9 +103,9 @@ export default {
     },
     handleAnalyze() {
       analyze().then(res => {
-        const { columns, rows } = res
-        this.chartData.columns = columns
-        this.chartData.rows = rows
+        const { data } = res
+        this.chartData.columns = data.columns
+        this.chartData.rows = data.rows
       })
     }
   }
